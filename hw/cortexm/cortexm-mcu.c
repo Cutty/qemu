@@ -436,7 +436,7 @@ static void cortexm_mcu_memory_regions_create_callback(DeviceState *dev)
     memory_region_init_ram(flash_mem, mem_container, "flash", flash_size,
             &error_fatal);
     vmstate_register_ram_global(flash_mem);
-    memory_region_set_readonly(flash_mem, true);
+    memory_region_set_readonly(flash_mem, false);
     memory_region_add_subregion(system_memory, 0x00000000, flash_mem);
 
     MemoryRegion *sram_mem = &cm_state->sram_mem;
