@@ -56,11 +56,16 @@ int arm_cpu_gdb_read_register(CPUState *cs, uint8_t *mem_buf, int n)
             return 0;
         }
         return gdb_get_reg32(mem_buf, 0);
+#if !defined(CONFIG_GNU_ARM_ECLIPSE)
     case 25:
         /* CPSR */
         return gdb_get_reg32(mem_buf, cpsr_read(env));
 
-#if defined(CONFIG_GNU_ARM_ECLIPSE)
+#else /* defined(CONFIG_GNU_ARM_ECLIPSE) */
+    case 25:
+        /* xPSR */
+        return gdb_get_reg32(mem_buf, xpsr_read(env));
+
     case 26:
         /* MSP */
         return gdb_get_reg32(mem_buf, helper_v7m_mrs(env, 8));
@@ -79,7 +84,7 @@ int arm_cpu_gdb_read_register(CPUState *cs, uint8_t *mem_buf, int n)
     case 31:
         /* CONTROL */
         return gdb_get_reg32(mem_buf, helper_v7m_mrs(env, 20));
-#endif /* defined(CONFIG_GNU_ARM_ECLIPSE) */
+#endif /* !defined(CONFIG_GNU_ARM_ECLIPSE) */
 
     }
     /* Unknown register.  */
@@ -119,12 +124,18 @@ int arm_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             return 0;
         }
         return 4;
+#if !defined(CONFIG_GNU_ARM_ECLIPSE)
     case 25:
         /* CPSR */
         cpsr_write(env, tmp, 0xffffffff, CPSRWriteByGDBStub);
         return 4;
 
-#if defined(CONFIG_GNU_ARM_ECLIPSE)
+#else /* defined(CONFIG_GNU_ARM_ECLIPSE) */
+    case 25:
+        /* xPSR */
+        xpsr_write(env, tmp, 0xffffffff);
+        return 4;
+
     case 26:
         /* MSP */
         helper_v7m_msr(env, 8, tmp);
@@ -149,7 +160,7 @@ int arm_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
         /* CONTROL */
         helper_v7m_msr(env, 20, tmp);
         return 4;
-#endif /* defined(CONFIG_GNU_ARM_ECLIPSE) */
+#endif /* !defined(CONFIG_GNU_ARM_ECLIPSE) */
 
         }
     /* Unknown register.  */

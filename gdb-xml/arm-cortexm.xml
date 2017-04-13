@@ -6,7 +6,7 @@
      notice and this notice are preserved.  -->
 
 <!DOCTYPE feature SYSTEM "gdb-target.dtd">
-<feature name="org.gnu.gdb.arm.core">
+<feature name="org.gnu.gdb.arm.m-profile">
   <reg name="r0" bitsize="32"/>
   <reg name="r1" bitsize="32"/>
   <reg name="r2" bitsize="32"/>
@@ -24,10 +24,10 @@
   <reg name="lr" bitsize="32"/>
   <reg name="pc" bitsize="32" type="code_ptr"/>
 
-  <!-- The CPSR is register 25, rather than register 16, because
+  <!-- The xPSR is register 25, rather than register 16, because
        the FPA registers historically were placed between the PC
-       and the CPSR in the "g" packet.  -->
-  <reg name="cpsr" bitsize="32" regnum="25"/>
+       and the xPSR in the "g" packet.  -->
+  <reg name="xpsr" bitsize="32" regnum="25"/>
   
   <!-- These registers were inspired by J-Link -->
   <reg name="MSP" bitsize="32" regnum="26"/>
